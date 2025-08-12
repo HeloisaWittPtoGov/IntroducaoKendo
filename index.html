@@ -82,8 +82,7 @@
                $("#categoria").data("kendoDropDownList").value(rstGrid.categoria);
                $("#preco").data("kendoNumericTextBox").value(rstGrid.preco);
                $("#dataCadastro").val(rstGrid.dataCadastro);
-               $("#FlgAtivo").prop("checked", rstGrid.ativo == "Sim")
-               console.log(rstGrid.ativo)
+               $("#FlgAtivo").prop("checked", rstGrid.ativo == "Sim");
               } 
             },
           ]
@@ -156,14 +155,10 @@
               text:"Excluir",
               id:"BtnExcluir",
               click: function(){
-                $("#grid").data("kendoGrid").dataSource.remove({
-                  nome:$("#nome").val(),
-                  categoria:$("#categoria").data("kendoDropDownList").value(),
-                  preco:$("#preco").val(),
-                  dataCadastro:$("#dataCadastro").val(),
-                  ativo: $("#FlgAtivo").is(":checked") ? "Sim" : "Não"
-                })
-                $("#grid").data("kendoGrid").dataSource.read()
+                let grid = $("#grid").data("kendoGrid");
+                let item = grid.dataItem(grid.select());
+                $("#grid").data("kendoGrid").dataSource.remove(item);
+                $("#grid").dataSource.read()
               }
             },
             {
