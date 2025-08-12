@@ -47,13 +47,13 @@
   <script src="js/mascara.js" type="text/javascript"></script>
   <script src="js/jquery.mask.js" charset="ISO-8859-1"></script>
 
-<style>
-  .k-splitbar .k-resize-handle{
-    background: none;
-    width: 0;
-    height:0 ;
-  }
-</style>
+  <style>
+    .k-splitbar .k-resize-handle {
+      background: none;
+      width: 0;
+      height: 0;
+    }
+  </style>
 
 </head>
 
@@ -62,30 +62,30 @@
     $("#BarAcoes").kendoToolBar({
       items: [
         {
-          type:"spacer",
+          type: "spacer",
         },
         {
           type: "buttonGroup",
           buttons: [
-            { 
-              text: "Incluir", 
+            {
+              text: "Incluir",
               id: "BtnIncluir",
-              click: function(){ 
+              click: function () {
                 $("#WinConsultaProduto").data("kendoWindow").open();
                 $("#WinConsultaProduto #id").val("");
                 $("#WinConsultaProduto #nome").val("");
                 $("#WinConsultaProduto #categoria").data("kendoDropDownList").value("");
                 $("#WinConsultaProduto #preco").data("kendoNumericTextBox").value("");
                 $("#WinConsultaProduto #dataCadastro").val("");
-                $("#WinConsultaProduto #FlgAtivo").prop("checked",false)
+                $("#WinConsultaProduto #FlgAtivo").prop("checked", false)
 
-              } 
-            },            
-            { 
+              }
+            },
+            {
               text: "Editar",
-              id:"BtnEditar",
+              id: "BtnEditar",
               enable: false,
-              click: function(){
+              click: function () {
                 $("#WinConsultaProduto").data("kendoWindow").open();
                 let GrdConsultaProduto = $("#GrdConsultaProduto").data("kendoGrid");
                 let rstGrid = GrdConsultaProduto.dataItem(GrdConsultaProduto.select());
@@ -95,47 +95,47 @@
                 $("#WinConsultaProduto #preco").data("kendoNumericTextBox").value(rstGrid.preco);
                 $("#WinConsultaProduto #dataCadastro").val(rstGrid.dataCadastro);
                 $("#WinConsultaProduto #FlgAtivo").prop("checked", rstGrid.ativo == "Sim");
-              } 
+              }
             },
           ]
         }
-      ]  
+      ]
     });
 
     $("#GrdConsultaProduto").kendoGrid({
       columns: [
         {
-          field:"id",
-          title:"ID",
-          width:"80px"
+          field: "id",
+          title: "ID",
+          width: "80px"
         },
         {
-          field:"nome", 
+          field: "nome",
           title: "Nome",
         },
         {
-          field:"categoria",
-          title:"Categoria",
+          field: "categoria",
+          title: "Categoria",
         },
         {
-          field:"preco",
-          title:"Preço",
-          width:"100px",
+          field: "preco",
+          title: "Preço",
+          width: "100px",
         },
         {
-          field:"dataCadastro",
-          title:"Data de Cadastro",
-          width:"150px",
+          field: "dataCadastro",
+          title: "Data de Cadastro",
+          width: "150px",
         },
         {
-          field:"ativo",
-          title:"Ativo",
-          width:"100px"
+          field: "ativo",
+          title: "Ativo",
+          width: "100px"
         }
-      ], 
-      dataSource: [ {id:"1", nome: "Bolacha Parati", categoria:"Bolacha", preco:"3.00", ativo:"Sim", dataCadastro: "30/05/2025" }, {id:"2", nome: "Bolacha Panco", categoria:"Bolacha", preco:"2.25", ativo:"Sim", dataCadastro: "30/05/2025"}],
+      ],
+      dataSource: [{ id: "1", nome: "Bolacha Parati", categoria: "Bolacha", preco: "3.00", ativo: "Sim", dataCadastro: "30/05/2025" }, { id: "2", nome: "Bolacha Panco", categoria: "Bolacha", preco: "2.25", ativo: "Sim", dataCadastro: "30/05/2025" }],
       selectable: "row",
-      change:function(){
+      change: function () {
         let GrdConsultaProduto = $("#GrdConsultaProduto").data("kendoGrid");
         let item = GrdConsultaProduto.dataItem(GrdConsultaProduto.select())
         $("#tabStripConsultaProduto #id").val(item.id);
@@ -151,9 +151,9 @@
       width: 800,
       visible: false,
       title: "Cadastro de Produtos",
-      maxWidth:800,
+      maxWidth: 800,
       maxHeight: 200,
-      position:{
+      position: {
         top: 140,
         left: "20%"
       }
@@ -161,31 +161,46 @@
     });
 
     $("#BarAcoesWin").kendoToolBar({
-      items:[
+      items: [
         {
-        type:"spacer",
+          type: "spacer",
         },
         {
-          type:"buttonGroup",
-          buttons:[
+          type: "buttonGroup",
+          buttons: [
             {
-              text:"Gravar",
-              id:"BtnGravar",
-              click: function(){
-                $("#GrdConsultaProduto").data("kendoGrid").dataSource.add({
-                  id:$("#GrdConsultaProduto").data("kendoGrid").dataSource.data().length +1,
-                  nome:$("#WinConsultaProduto #nome").val(),
-                  categoria:$("#WinConsultaProduto #categoria").data("kendoDropDownList").value(),
-                  preco:$("#WinConsultaProduto #preco").val(),
-                  dataCadastro:$("#WinConsultaProduto #dataCadastro").val(),
-                  ativo: $("#WinConsultaProduto #FlgAtivo").is(":checked") ? "Sim" : "Não"
-                })
+              text: "Gravar",
+              id: "BtnGravar",
+              click: function () {
+                let strMensagem = "";
+                if ($("#WinConsultaProduto #nome").val().trim() == "") {
+                  strMensagem = strMensagem + "O campo nome é de preechimento obrigatório.\n"
+                }
+                if ($("#WinConsultaProduto #categoria").val().trim() == "") {
+                  strMensagem = strMensagem + "O campo Categoria é de preenchimento obrigatório.\n"
+                }
+                if ($("#WinConsultaProduto #preco").val().trim() <= 0) {
+                  strMensagem = strMensagem + "O Preço deve ser maior que 0,00."
+                }
+                if (strMensagem != "") {
+                  alert(strMensagem)
+                  console.log(strMensagem)
+                } else {
+                  $("#GrdConsultaProduto").data("kendoGrid").dataSource.add({
+                    id: $("#GrdConsultaProduto").data("kendoGrid").dataSource.data().length + 1,
+                    nome: $("#WinConsultaProduto #nome").val(),
+                    categoria: $("#WinConsultaProduto #categoria").data("kendoDropDownList").value(),
+                    preco: $("#WinConsultaProduto #preco").val(),
+                    dataCadastro: $("#WinConsultaProduto #dataCadastro").val(),
+                    ativo: $("#WinConsultaProduto #FlgAtivo").is(":checked") ? "Sim" : "Não"
+                  })
+                }
               }
             },
             {
-              text:"Excluir",
-              id:"BtnExcluir",
-              click: function(){
+              text: "Excluir",
+              id: "BtnExcluir",
+              click: function () {
                 let GrdConsultaProduto = $("#GrdConsultaProduto").data("kendoGrid");
                 let item = GrdConsultaProduto.dataItem(GrdConsultaProduto.select());
                 $("#GrdConsultaProduto").data("kendoGrid").dataSource.remove(item);
@@ -193,22 +208,22 @@
               }
             },
             {
-              text:"Limpar",
-              id:"BtnLimpar",
-              click: function(){
+              text: "Limpar",
+              id: "BtnLimpar",
+              click: function () {
                 $("#WinConsultaProduto").data("kendoWindow").open();
                 $("#WinConsultaProduto #id").val("");
                 $("#WinConsultaProduto #nome").val("");
                 $("#WinConsultaProduto #categoria").data("kendoDropDownList").value("");
                 $("#WinConsultaProduto #preco").data("kendoNumericTextBox").value("");
                 $("#WinConsultaProduto #dataCadastro").val("");
-                $("#WinConsultaProduto #FlgAtivo").prop("checked",false)
+                $("#WinConsultaProduto #FlgAtivo").prop("checked", false)
               }
             },
             {
-              text:"Fechar",
-              id:"BtnFechar",
-              click: function(){
+              text: "Fechar",
+              id: "BtnFechar",
+              click: function () {
                 $("#WinConsultaProduto").data("kendoWindow").close()
               }
             }
@@ -217,13 +232,13 @@
       ]
     })
     $("#WinConsultaProduto #categoria").kendoDropDownList({
-      dataSource:[
-        {name:""},
-        {name:"Bolacha"},
-        {name:"Café"},
-        {name:"Trigo"}
+      dataSource: [
+        { name: "" },
+        { name: "Bolacha" },
+        { name: "Café" },
+        { name: "Trigo" }
       ],
-      dataTextField:"name",
+      dataTextField: "name",
       dataValueField: "name",
     });
 
@@ -240,10 +255,10 @@
     $("#tabStripConsultaProduto").kendoTabStrip()
 
     $("#splConsulta").kendoSplitter({
-      orientation:"vertical",
-      panes:[{min:"25px"}, {min:"100px"}, {}],
+      orientation: "vertical",
+      panes: [{ min: "25px" }, { min: "100px" }, {}],
     })
-  
+
 
   });
 
@@ -252,13 +267,13 @@
 <body>
   <div id="splConsulta" style="height: 100%;">
     <div id="splHeader">
-      <div id="BarAcoes"></div> 
+      <div id="BarAcoes"></div>
     </div>
-    
+
     <div id="splMiddle">
       <div id="GrdConsultaProduto"></div>
     </div>
-    
+
     <div id="splFooter">
       <div id="tabStripConsultaProduto">
         <ul>
@@ -267,53 +282,53 @@
         <div id="infosDetalhes">
           <table>
             <td style="text-align: right; width: 118px;">
-                  ID:
-                </td>
-                <td>
-                  <input id="id" type="text" class="k-textbox k-input-disabled" style="width: 80px;">
-                </td>
+              ID:
+            </td>
+            <td>
+              <input id="id" type="text" class="k-textbox k-input-disabled" style="width: 80px;">
+            </td>
           </table>
           <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
-              <tr>
-                <td style="text-align: right; width: 120px;">
-                  Nome:
-                </td>
-                <td>
-                  <input type="text" id="nome" class="k-textbox k-input-disabled" style="width: 600px;">
-                </td>
-              </tr>
-            </table>
-            <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
-              <tr>
-                <td style="text-align: right; width: 120px;">
-                  Categoria:
-                </td>
-                <td>
-                  <input id="categoria" style="width: 600px;" class="k-textbox k-input-disabled" >
-                </td>
-              </tr>
-            </table>
-            <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
-              <tr>
-                <td style="text-align: right; width: 120px;">
-                  Preço: 
-                </td>
-                <td style="width: 315px;">
-                  <input id="preco" class="k-input-disabled k-textbox">
-                </td>
-                <td style="text-align: right; width: 150px;">
-                  Data de Cadastro:
-                </td>
-                <td>
-                  <input id="dataCadastro" class="k-input-disabled k-textbox">
-                </td>
-              </tr>
-            </table>
+            <tr>
+              <td style="text-align: right; width: 120px;">
+                Nome:
+              </td>
+              <td>
+                <input type="text" id="nome" class="k-textbox k-input-disabled" style="width: 600px;">
+              </td>
+            </tr>
+          </table>
+          <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
+            <tr>
+              <td style="text-align: right; width: 120px;">
+                Categoria:
+              </td>
+              <td>
+                <input id="categoria" style="width: 600px;" class="k-textbox k-input-disabled">
+              </td>
+            </tr>
+          </table>
+          <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
+            <tr>
+              <td style="text-align: right; width: 120px;">
+                Preço:
+              </td>
+              <td style="width: 315px;">
+                <input id="preco" class="k-input-disabled k-textbox">
+              </td>
+              <td style="text-align: right; width: 150px;">
+                Data de Cadastro:
+              </td>
+              <td>
+                <input id="dataCadastro" class="k-input-disabled k-textbox">
+              </td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
   </div>
-  
+
   <div id="WinConsultaProduto" style="display: flex; justify-content: center;align-items: center;">
     <div id="form" class="k-form" style="width: 100%;">
       <form>
@@ -329,7 +344,7 @@
         </table>
         <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
           <tr>
-            <td style="text-align: right; width: 120px;">
+            <td style="text-align: right; width: 120px; color: red;">
               Nome:
             </td>
             <td>
@@ -339,7 +354,7 @@
         </table>
         <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
           <tr>
-            <td style="text-align: right; width: 120px;">
+            <td style="text-align: right; width: 120px; color: red;">
               Categoria:
             </td>
             <td>
@@ -349,8 +364,8 @@
         </table>
         <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
           <tr>
-            <td style="text-align: right; width: 120px;">
-               Preço: 
+            <td style="text-align: right; width: 120px; color: red;">
+              Preço:
             </td>
             <td>
               <input id="preco">
