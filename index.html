@@ -59,6 +59,13 @@
 
 <script>
   $(function () {
+    $("#BtnPesquisar").kendoButton({
+      click: function () {
+        if ($("#nomeFiltro").val() != "") {
+          $("#GrdConsultaProduto").data("kendoGrid").dataSource.filter({ field: "nome", operator: "contains", value: $("#nomeFiltro").val() })
+        }
+      }
+    })
     $("#BarAcoes").kendoToolBar({
       items: [
         {
@@ -71,13 +78,13 @@
               text: "Incluir",
               id: "BtnIncluir",
               click: function () {
-                $("#WinConsultaProduto").data("kendoWindow").open();
-                $("#WinConsultaProduto #id").val("");
-                $("#WinConsultaProduto #nome").val("");
-                $("#WinConsultaProduto #categoria").data("kendoDropDownList").value("");
-                $("#WinConsultaProduto #preco").data("kendoNumericTextBox").value("");
-                $("#WinConsultaProduto #dataCadastro").val("");
-                $("#WinConsultaProduto #FlgAtivo").prop("checked", false)
+                $("#WinCadastroProduto").data("kendoWindow").open();
+                $("#WinCadastroProduto #id").val("");
+                $("#WinCadastroProduto #nome").val("");
+                $("#WinCadastroProduto #categoria").data("kendoDropDownList").value("");
+                $("#WinCadastroProduto #preco").data("kendoNumericTextBox").value("");
+                $("#WinCadastroProduto #dataCadastro").val("");
+                $("#WinCadastroProduto #FlgAtivo").prop("checked", false)
 
               }
             },
@@ -86,15 +93,15 @@
               id: "BtnEditar",
               enable: false,
               click: function () {
-                $("#WinConsultaProduto").data("kendoWindow").open();
+                $("#WinCadastroProduto").data("kendoWindow").open();
                 let GrdConsultaProduto = $("#GrdConsultaProduto").data("kendoGrid");
                 let rstGrid = GrdConsultaProduto.dataItem(GrdConsultaProduto.select());
-                $("#WinConsultaProduto #id").val(rstGrid.id);
-                $("#WinConsultaProduto #nome").val(rstGrid.nome);
-                $("#WinConsultaProduto #categoria").data("kendoDropDownList").value(rstGrid.categoria);
-                $("#WinConsultaProduto #preco").data("kendoNumericTextBox").value(rstGrid.preco);
-                $("#WinConsultaProduto #dataCadastro").val(rstGrid.dataCadastro);
-                $("#WinConsultaProduto #FlgAtivo").prop("checked", rstGrid.ativo == "Sim");
+                $("#WinCadastroProduto #id").val(rstGrid.id);
+                $("#WinCadastroProduto #nome").val(rstGrid.nome);
+                $("#WinCadastroProduto #categoria").data("kendoDropDownList").value(rstGrid.categoria);
+                $("#WinCadastroProduto #preco").data("kendoNumericTextBox").value(rstGrid.preco);
+                $("#WinCadastroProduto #dataCadastro").val(rstGrid.dataCadastro);
+                $("#WinCadastroProduto #FlgAtivo").prop("checked", rstGrid.ativo == "Sim");
               }
             },
           ]
@@ -147,7 +154,7 @@
       }
     });
 
-    $("#WinConsultaProduto").kendoWindow({
+    $("#WinCadastroProduto").kendoWindow({
       width: 800,
       visible: false,
       title: "Cadastro de Produtos",
@@ -173,13 +180,13 @@
               id: "BtnGravar",
               click: function () {
                 let strMensagem = "";
-                if ($("#WinConsultaProduto #nome").val().trim() == "") {
+                if ($("#WinCadastroProduto #nome").val().trim() == "") {
                   strMensagem = strMensagem + "O campo nome é de preechimento obrigatório.\n"
                 }
-                if ($("#WinConsultaProduto #categoria").val().trim() == "") {
+                if ($("#WinCadastroProduto #categoria").val().trim() == "") {
                   strMensagem = strMensagem + "O campo Categoria é de preenchimento obrigatório.\n"
                 }
-                if ($("#WinConsultaProduto #preco").val().trim() <= 0) {
+                if ($("#WinCadastroProduto #preco").val().trim() <= 0) {
                   strMensagem = strMensagem + "O Preço deve ser maior que 0,00."
                 }
                 if (strMensagem != "") {
@@ -188,12 +195,13 @@
                 } else {
                   $("#GrdConsultaProduto").data("kendoGrid").dataSource.add({
                     id: $("#GrdConsultaProduto").data("kendoGrid").dataSource.data().length + 1,
-                    nome: $("#WinConsultaProduto #nome").val(),
-                    categoria: $("#WinConsultaProduto #categoria").data("kendoDropDownList").value(),
-                    preco: $("#WinConsultaProduto #preco").val(),
-                    dataCadastro: $("#WinConsultaProduto #dataCadastro").val(),
-                    ativo: $("#WinConsultaProduto #FlgAtivo").is(":checked") ? "Sim" : "Não"
+                    nome: $("#WinCadastroProduto #nome").val(),
+                    categoria: $("#WinCadastroProduto #categoria").data("kendoDropDownList").value(),
+                    preco: $("#WinCadastroProduto #preco").val(),
+                    dataCadastro: $("#WinCadastroProduto #dataCadastro").val(),
+                    ativo: $("#WinCadastroProduto #FlgAtivo").is(":checked") ? "Sim" : "Não"
                   })
+                  $("#BtnPesquisar").click()
                 }
               }
             },
@@ -204,34 +212,34 @@
                 let GrdConsultaProduto = $("#GrdConsultaProduto").data("kendoGrid");
                 let item = GrdConsultaProduto.dataItem(GrdConsultaProduto.select());
                 $("#GrdConsultaProduto").data("kendoGrid").dataSource.remove(item);
-                $("#GrdConsultaProduto").dataSource.read()
+                $("#BtnPesquisar").click()
               }
             },
             {
               text: "Limpar",
               id: "BtnLimpar",
               click: function () {
-                $("#WinConsultaProduto").data("kendoWindow").open();
-                $("#WinConsultaProduto #id").val("");
-                $("#WinConsultaProduto #nome").val("");
-                $("#WinConsultaProduto #categoria").data("kendoDropDownList").value("");
-                $("#WinConsultaProduto #preco").data("kendoNumericTextBox").value("");
-                $("#WinConsultaProduto #dataCadastro").val("");
-                $("#WinConsultaProduto #FlgAtivo").prop("checked", false)
+                $("#WinCadastroProduto").data("kendoWindow").open();
+                $("#WinCadastroProduto #id").val("");
+                $("#WinCadastroProduto #nome").val("");
+                $("#WinCadastroProduto #categoria").data("kendoDropDownList").value("");
+                $("#WinCadastroProduto #preco").data("kendoNumericTextBox").value("");
+                $("#WinCadastroProduto #dataCadastro").val("");
+                $("#WinCadastroProduto #FlgAtivo").prop("checked", false)
               }
             },
             {
               text: "Fechar",
               id: "BtnFechar",
               click: function () {
-                $("#WinConsultaProduto").data("kendoWindow").close()
+                $("#WinCadastroProduto").data("kendoWindow").close()
               }
             }
           ]
         }
       ]
     })
-    $("#WinConsultaProduto #categoria").kendoDropDownList({
+    $("#WinCadastroProduto #categoria").kendoDropDownList({
       dataSource: [
         { name: "" },
         { name: "Bolacha" },
@@ -242,12 +250,12 @@
       dataValueField: "name",
     });
 
-    $("#WinConsultaProduto #preco").kendoNumericTextBox({
+    $("#WinCadastroProduto #preco").kendoNumericTextBox({
       decimals: 2,
       restrictDecimals: true,
     })
 
-    $("#WinConsultaProduto #dataCadastro").kendoDatePicker({
+    $("#WinCadastroProduto #dataCadastro").kendoDatePicker({
       dateInput: true,
       format: "dd/MM/yyyy"
     })
@@ -267,6 +275,10 @@
 <body>
   <div id="splConsulta" style="height: 100%;">
     <div id="splHeader">
+      <div class="k-filter k-bg-blue screen-filter-content">
+        <input class="k-textbox" type="text" id="nomeFiltro" placeholder="Informe o nome">
+        <span id="BtnPesquisar">Pesquisar</span>
+      </div>
       <div id="BarAcoes"></div>
     </div>
 
@@ -329,7 +341,7 @@
     </div>
   </div>
 
-  <div id="WinConsultaProduto" style="display: flex; justify-content: center;align-items: center;">
+  <div id="WinCadastroProduto" style="display: flex; justify-content: center;align-items: center;">
     <div id="form" class="k-form" style="width: 100%;">
       <form>
         <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
@@ -344,7 +356,7 @@
         </table>
         <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
           <tr>
-            <td style="text-align: right; width: 120px; color: red;">
+            <td style="text-align: right; width: 120px;" class="k-required">
               Nome:
             </td>
             <td>
@@ -354,7 +366,7 @@
         </table>
         <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
           <tr>
-            <td style="text-align: right; width: 120px; color: red;">
+            <td style="text-align: right; width: 120px;" class="k-required">
               Categoria:
             </td>
             <td>
@@ -364,7 +376,7 @@
         </table>
         <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
           <tr>
-            <td style="text-align: right; width: 120px; color: red;">
+            <td style="text-align: right; width: 120px;" class="k-required">
               Preço:
             </td>
             <td>
