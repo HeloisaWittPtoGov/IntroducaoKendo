@@ -224,23 +224,29 @@
       format: "dd/MM/yyyy"
     })
 
-    $("#tabStripConsultaProduto").kendotabStripConsultaProduto()
+    $("#tabStripConsultaProduto").kendoTabStrip()
+
+    $("#splConsulta").kendoSplitter({
+      orientation:"vertical",
+      panes:[{}, {}, {}]
+    })
+  
 
   });
 
 </script>
 
 <body>
-  <div>
-    <div>
-      <div id="BarAcoes"></div>
+  <div id="splConsulta">
+    <div id="splHeader">
+      <div id="BarAcoes"></div> 
     </div>
     
-    <div>
+    <div id="splMiddle">
       <div id="GrdConsultaProduto"></div>
     </div>
     
-    <div>
+    <div id="splFooter">
       <div id="tabStripConsultaProduto">
         <ul>
           <li class="k-state-active">Detalhes</li>
