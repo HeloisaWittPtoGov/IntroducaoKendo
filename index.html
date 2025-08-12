@@ -46,6 +46,15 @@
   <script src="js/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
   <script src="js/mascara.js" type="text/javascript"></script>
   <script src="js/jquery.mask.js" charset="ISO-8859-1"></script>
+
+<style>
+  .k-splitbar .k-resize-handle{
+    background: none;
+    width: 0;
+    height:0 ;
+  }
+</style>
+
 </head>
 
 <script>
@@ -141,13 +150,17 @@
     $("#WinConsultaProduto").kendoWindow({
       width: 800,
       visible: false,
+      title: "Cadastro de Produtos",
+      maxWidth:800,
+      maxHeight: 200,
       position:{
-        top: 150,
+        top: 140,
         left: "20%"
       }
+
     });
 
-    $("#BarAcoes").kendoToolBar({
+    $("#BarAcoesWin").kendoToolBar({
       items:[
         {
         type:"spacer",
@@ -228,7 +241,7 @@
 
     $("#splConsulta").kendoSplitter({
       orientation:"vertical",
-      panes:[{}, {}, {}]
+      panes:[{min:"25px"}, {min:"100px"}, {}],
     })
   
 
@@ -237,7 +250,7 @@
 </script>
 
 <body>
-  <div id="splConsulta">
+  <div id="splConsulta" style="height: 100%;">
     <div id="splHeader">
       <div id="BarAcoes"></div> 
     </div>
@@ -358,7 +371,7 @@
             </td>
           </tr>
         </table>
-        <div id="BarAcoes"></div>
+        <div id="BarAcoesWin"></div>
       </form>
     </div>
   </div>
