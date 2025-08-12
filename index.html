@@ -60,35 +60,42 @@
           buttons: [
             { 
               text: "Incluir", 
+              id: "BtnIncluir",
               click: function(){ 
                 $("#dialog").data("kendoWindow").open();
-                $("#id").val("");
-                $("#nome").val("");
-                $("#categoria").data("kendoDropDownList").value("");
-                $("#preco").data("kendoNumericTextBox").value("");
-                $("#dataCadastro").val("");
-                $("#FlgAtivo").prop("checked",false)
+                $("#dialog #id").val("");
+                $("#dialog #nome").val("");
+                $("#dialog #categoria").data("kendoDropDownList").value("");
+                $("#dialog #preco").data("kendoNumericTextBox").value("");
+                $("#dialog #dataCadastro").val("");
+                $("#dialog #FlgAtivo").prop("checked",false)
 
               } 
             },            
             { 
               text: "Editar",
-            click: function(){
-               $("#dialog").data("kendoWindow").open();
-               let grid = $("#grid").data("kendoGrid");
-               let rstGrid = grid.dataItem(grid.select());
-               $("#id").val(rstGrid.id);
-               $("#nome").val(rstGrid.nome);
-               $("#categoria").data("kendoDropDownList").value(rstGrid.categoria);
-               $("#preco").data("kendoNumericTextBox").value(rstGrid.preco);
-               $("#dataCadastro").val(rstGrid.dataCadastro);
-               $("#FlgAtivo").prop("checked", rstGrid.ativo == "Sim");
+              id:"BtnEditar",
+              click: function(){
+                $("#dialog").data("kendoWindow").open();
+                let grid = $("#grid").data("kendoGrid");
+                let rstGrid = grid.dataItem(grid.select());
+                $("#dialog #id").val(rstGrid.id);
+                $("#dialog #nome").val(rstGrid.nome);
+                $("#dialog #categoria").data("kendoDropDownList").value(rstGrid.categoria);
+                $("#dialog #preco").data("kendoNumericTextBox").value(rstGrid.preco);
+                $("#dialog #dataCadastro").val(rstGrid.dataCadastro);
+                $("#dialog #FlgAtivo").prop("checked", rstGrid.ativo == "Sim");
               } 
             },
           ]
         }
-      ]
+      ]  
     });
+
+    var toolbar = $("#toolbar").data("kendoToolBar");
+    toolbar.enable("#BtnEditar", false);
+    
+
     $("#grid").kendoGrid({
       columns: [
         {
@@ -121,7 +128,16 @@
         }
       ], 
       dataSource: [ {id:"1", nome: "Bolacha Parati", categoria:"Bolacha", preco:"3.00", ativo:"Sim", dataCadastro: "30/05/2025" }, {id:"2", nome: "Bolacha Panco", categoria:"Bolacha", preco:"2.25", ativo:"Sim", dataCadastro: "30/05/2025"}],
-      selectable: "row"
+      selectable: "row",
+      change:function(){
+        let grid = $("#grid").data("kendoGrid");
+        let item = grid.dataItem(grid.select())
+        $("#tabStrip #id").val(item.id);
+        $("#tabStrip #nome").val(item.nome);
+        $("#tabStrip #categoria").val(item.categoria);
+        $("#tabStrip #preco").val(item.preco);
+        $("#tabStrip #dataCadastro").val(item.dataCadastro);
+      }
     });
 
     $("#dialog").kendoWindow({
@@ -143,11 +159,11 @@
               click: function(){
                 $("#grid").data("kendoGrid").dataSource.add({
                   id:$("#grid").data("kendoGrid").dataSource.data().length +1,
-                  nome:$("#nome").val(),
-                  categoria:$("#categoria").data("kendoDropDownList").value(),
-                  preco:$("#preco").val(),
-                  dataCadastro:$("#dataCadastro").val(),
-                  ativo: $("#FlgAtivo").is(":checked") ? "Sim" : "Não"
+                  nome:$("#dialog #nome").val(),
+                  categoria:$("#dialog #categoria").data("kendoDropDownList").value(),
+                  preco:$("#dialog #preco").val(),
+                  dataCadastro:$("#dialog #dataCadastro").val(),
+                  ativo: $("#dialog #FlgAtivo").is(":checked") ? "Sim" : "Não"
                 })
               }
             },
@@ -166,12 +182,12 @@
               id:"BtnLimpar",
               click: function(){
                 $("#dialog").data("kendoWindow").open();
-                $("#id").val("");
-                $("#nome").val("");
-                $("#categoria").data("kendoDropDownList").value("");
-                $("#preco").data("kendoNumericTextBox").value("");
-                $("#dataCadastro").val("");
-                $("#FlgAtivo").prop("checked",false)
+                $("#dialog #id").val("");
+                $("#dialog #nome").val("");
+                $("#dialog #categoria").data("kendoDropDownList").value("");
+                $("#dialog #preco").data("kendoNumericTextBox").value("");
+                $("#dialog #dataCadastro").val("");
+                $("#dialog #FlgAtivo").prop("checked",false)
               }
             },
             {
@@ -185,7 +201,7 @@
         }
       ]
     })
-    $("#categoria").kendoDropDownList({
+    $("#dialog #categoria").kendoDropDownList({
       dataSource:[
         {name:""},
         {name:"Bolacha"},
@@ -196,14 +212,20 @@
       dataValueField: "name",
     });
 
-    $("#preco").kendoNumericTextBox({
+    $("#dialog #preco").kendoNumericTextBox({
       decimals: 2,
+      restrictDecimals: true,
     })
 
-    $("#dataCadastro").kendoDatePicker({
+    $("#dialog #dataCadastro").kendoDatePicker({
       dateInput: true,
       format: "dd/MM/yyyy"
     })
+
+    $("#tabStrip").kendoTabStrip({
+    
+    })
+
   });
 
 </script>
@@ -211,6 +233,57 @@
 <body>
   <div id="toolbar"></div>
   <div id="grid" ></div>
+  <div id="tabStrip">
+    <ul>
+      <li class="k-state-active">Detalhes</li>
+    </ul>
+    <div id="infosDetalhes">
+      <table>
+        <td style="text-align: right; width: 118px;">
+              ID:
+            </td>
+            <td>
+              <input id="id" type="text" class="k-textbox k-input-disabled" style="width: 80px;">
+            </td>
+      </table>
+      <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
+          <tr>
+            <td style="text-align: right; width: 120px;">
+              Nome:
+            </td>
+            <td>
+              <input type="text" id="nome" class="k-textbox k-input-disabled" style="width: 600px;">
+            </td>
+          </tr>
+        </table>
+        <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
+          <tr>
+            <td style="text-align: right; width: 120px;">
+              Categoria:
+            </td>
+            <td>
+              <input id="categoria" style="width: 600px;" class="k-textbox k-input-disabled" >
+            </td>
+          </tr>
+        </table>
+        <table width="100%" cellpadding="0" cellspancing="2" role="presentation">
+          <tr>
+            <td style="text-align: right; width: 120px;">
+               Preço: 
+            </td>
+            <td style="width: 315px;">
+              <input id="preco" class="k-input-disabled k-textbox">
+            </td>
+            <td style="text-align: right; width: 150px;">
+              Data de Cadastro:
+            </td>
+            <td>
+              <input id="dataCadastro" class="k-input-disabled k-textbox">
+            </td>
+          </tr>
+        </table>
+    </div>
+  </div>
   <div id="dialog" style="display: flex; justify-content: center;align-items: center;">
     <div id="form" class="k-form" style="width: 100%;">
       <form>
