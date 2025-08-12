@@ -75,7 +75,15 @@
               text: "Editar",
             click: function(){
                $("#dialog").data("kendoWindow").open();
-               
+               let grid = $("#grid").data("kendoGrid");
+               let rstGrid = grid.dataItem(grid.select());
+               $("#id").val(rstGrid.id);
+               $("#nome").val(rstGrid.nome);
+               $("#categoria").data("kendoDropDownList").value(rstGrid.categoria);
+               $("#preco").data("kendoNumericTextBox").value(rstGrid.preco);
+               $("#dataCadastro").val(rstGrid.dataCadastro);
+               $("#FlgAtivo").prop("checked", rstGrid.ativo == "Sim")
+               console.log(rstGrid.ativo)
               } 
             },
           ]
@@ -113,7 +121,7 @@
           width:"100px"
         }
       ], 
-      dataSource: [ {id:"1", nome: "Bolacha Parati", categoria:"Bolacha", preco:"3,00", ativo:"Sim", dataCadastro: "30/05/2025" }, {id:"2", nome: "Bolacha Panco", categoria:"Bolacha", preco:"2,25", ativo:"Sim", dataCadastro: "30/05/2025"}],
+      dataSource: [ {id:"1", nome: "Bolacha Parati", categoria:"Bolacha", preco:"3.00", ativo:"Sim", dataCadastro: "30/05/2025" }, {id:"2", nome: "Bolacha Panco", categoria:"Bolacha", preco:"2.25", ativo:"Sim", dataCadastro: "30/05/2025"}],
       selectable: "row"
     });
 
@@ -162,12 +170,21 @@
               text:"Limpar",
               id:"BtnLimpar",
               click: function(){
-                
+                $("#dialog").data("kendoWindow").open();
+                $("#id").val("");
+                $("#nome").val("");
+                $("#categoria").data("kendoDropDownList").value("");
+                $("#preco").data("kendoNumericTextBox").value("");
+                $("#dataCadastro").val("");
+                $("#FlgAtivo").prop("checked",false)
               }
             },
             {
               text:"Fechar",
               id:"BtnFechar",
+              click: function(){
+                $("#dialog").data("kendoWindow").close()
+              }
             }
           ]
         }
