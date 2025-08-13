@@ -46,37 +46,53 @@
 	<script src="js/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
 	<script src="js/mascara.js" type="text/javascript"></script>
 	<script src="js/jquery.mask.js" charset="ISO-8859-1"></script>
+	<style>
+		.k-splitbar .k-resize-handle {
+			background: none;
+			width: 0;
+			height: 0;
+		}
+	</style>
+
 </head>
 
 <script>
+	kendo.culture("pt-BR")
+
+	let funcionarios = [
+		{ id: "1", nomeCompleto: "Ana", cargo: "Auxiliar Administrativo", salario: 2500.00, dataAdmissao: "03/05/2025", statusAtivo: "Sim" },
+		{ id: "2", nomeCompleto: "Joao", cargo: "Auxiliar Geral", salario: 2000.00, dataAdmissao: "03/05/2025", statusAtivo: "Sim" }
+	];
 	$(function () {
-		let funcionarios = [
-			{ nome: "Ana", cargo: "Auxiliar adm.", salario: 2500.00, dataAdmissao: "10/05/2025", statusAtivo: "Sim" }
-		]
 
 		$("#BarAcoes").kendoToolBar({
-			itens: [
+			items: [
 				{
 					type: "spacer",
 				},
 				{
-					type: "buttonGruop",
+					type: "buttonGroup",
 					buttons: [
 						{
 							text: "Incluir",
-							id: "BtnIncluir"
+							id: "BtnIncluir",
 						},
 						{
 							text: "Editar",
-							id: "BtnEditar"
+							id: "BtnEditar",
 						}
 					]
 				}
 			]
-		})
+		});
 
 		$("#GrdConsultaFuncionarios").kendoGrid({
-			colums: [
+			columns: [
+				{
+					field: "id",
+					title: "ID",
+					width: "80px"
+				},
 				{
 					field: "nomeCompleto",
 					title: "Nome",
@@ -87,28 +103,46 @@
 				},
 				{
 					field: "salario",
-					title: "Salário",
+					title: "Salario",
 					format: "{0:c}",
 				},
 				{
 					field: "dataAdmissao",
-					title: "Data de Adimissão",
+					title: "Data de Admissao",
 				},
 				{
 					field: "statusAtivo",
-					title: "Status Ativo"
+					title: "Status Ativo",
+					width: "80px"
 				}
-			]
+			],
+			dataSource: {
+				transport: {
+					read: function (options) {
+						options.success(funcionarios)
+					}
+				}
+			},
+			selectable: "row",
+			change: function () {
+				let GrdConsultaFuncionarios = $("#GrdConsultaFuncionarios").data("kendoGrid");
+				let item = GrdConsultaFuncionarios.dataItem(GrdConsultaFuncionarios.select());
+				$("#tabStripConsultaFuncionarios #id").val(item.id);
+				$("#tabStripConsultaFuncionarios #nomeCompleto").val(item.nomeCompleto);
+				$("#tabStripConsultaFuncionarios #cargo").val(item.cargo);
+				$("#tabStripConsultaFuncionarios #salario").val(item.salario);
+				$("#tabStripConsultaFuncionarios #dataAdmissao").val(item.dataAdmissao);
+			}
 
 		})
 
 		$("#tabStripConsultaFuncionarios").kendoTabStrip()
 
-		$("splConsulta").kendoSplitter({
-			operation: "vertical",
-			panes: [{ min: "25px" }, { min: "100px" }, {}],
+		$("#splConsulta").kendoSplitter({
+			orientation: "vertical",
+			panes: [{}, {}, {}],
 		})
-	})
+	});
 </script>
 
 <body>
@@ -123,10 +157,63 @@
 		</div>
 
 		<div id="splFooter">
-			<div id="tabStripConsultaFuncionarios"></div>
+			<div id="tabStripConsultaFuncionarios">
+				<ul>
+					<li class="k-state-active">Detalhes</li>
+				</ul>
+				<div id="infoDetalhes">
+					<table>
+						<tr>
+							<td style="text-align: right; width: 100px;">
+								ID:
+							</td>
+							<td>
+								<input id="id" type="text" class="k-textbox k-input-disabled" style="width: 80px;">
+							</td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td style="text-align: right; width: 100px;">
+								Nome:
+							</td>
+							<td>
+								<input id="nomeCompleto" type="text" class="k-textbox k-input-disabled"
+									style="width: 600px;">
+							</td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td style="text-align: right; width: 100px;">
+								Cargo:
+							</td>
+							<td>
+								<input id="cargo" type="text" class="k-textbox k-input-disabled" style="width: 600px;">
+							</td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td style="text-align: right; width: 100px;">
+								Salario:
+							</td>
+							<td style="width: 371px;">
+								<input id="salario" type="text" class="k-textbox k-input-disabled"
+									style="width: 120px;">
+							</td>
+							<td style="text-align: right; width: 100px;">
+								Data Admisao:
+							</td>
+							<td>
+								<input id="dataAdmissao" type="text" class="k-textbox k-input-disabled"
+									style="width: 120px;">
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
 		</div>
-
-
 	</div>
 </body>
 
