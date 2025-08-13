@@ -208,27 +208,48 @@
               text: "Gravar",
               id: "BtnGravar",
               click: function () {
+
+                let idCadastro = $("#id").val()
+                let indiceId = produtos.findIndex(i => i.id == idCadastro);
+
                 let strMensagem = "";
+
                 if ($("#WinCadastroProduto #nome").val().trim() == "") {
                   strMensagem = strMensagem + "O campo nome é de preechimento obrigatório.\n"
                 } else {
                   let nomeInformado = $("#WinCadastroProduto #nome").val().trim().toLowerCase();
-                  let verificaNome = produtos.find(i => i.nome.trim().toLocaleLowerCase() == nomeInformado)
+                  let verificaNome = produtos.find(function (i) {
+                    return i.nome.trim().toLocaleLowerCase() == nomeInformado && i.id != idCadastro
+                  })
                   if (verificaNome) {
                     strMensagem = strMensagem + "Já existe um produto cadastrado com o nome informado.\n"
                   }
                 }
+
                 if ($("#WinCadastroProduto #categoria").val().trim() == "") {
                   strMensagem = strMensagem + "O campo Categoria é de preenchimento obrigatório.\n"
                 }
+
                 if ($("#WinCadastroProduto #preco").val().trim() <= 0) {
                   strMensagem = strMensagem + "O Preço deve ser maior que 0,00."
                 }
 
                 if (strMensagem != "") {
                   alert(strMensagem)
-                  console.log(strMensagem)
-                } else {
+                }
+
+                if (indiceId >= 0) {
+                  produtos[indiceId] = {
+                    id: idCadastro,
+                    nome: $("#WinCadastroProduto #nome").val(),
+                    categoria: $("#WinCadastroProduto #categoria").data("kendoDropDownList").value(),
+                    preco: $("#WinCadastroProduto #preco").data("kendoNumericTextBox").value(),
+                    dataCadastro: $("#WinCadastroProduto #dataCadastro").val(),
+                    ativo: $("#WinCadastroProduto #FlgAtivo").is(":checked") ? "Sim" : "Não"
+
+                  }
+                }
+                else {
                   produtos.push({
                     id: $("#GrdConsultaProduto").data("kendoGrid").dataSource.data().length + 1,
                     nome: $("#WinCadastroProduto #nome").val(),
@@ -237,8 +258,9 @@
                     dataCadastro: $("#WinCadastroProduto #dataCadastro").val(),
                     ativo: $("#WinCadastroProduto #FlgAtivo").is(":checked") ? "Sim" : "Não"
                   })
-                  $("#BtnPesquisar").click();
                 }
+
+                $("#BtnPesquisar").click();
               }
             },
             {
@@ -249,10 +271,6 @@
                 let item = GrdConsultaProduto.dataItem(GrdConsultaProduto.select());
                 let indiceRemover = produtos.findIndex(i => i.id === item.id)
                 produtos.splice(indiceRemover, 1)
-
-                // Buscar o indice do produto a ser deletado (pelo item.id)
-
-                // Remover o produto pelo indice
 
                 $("#BtnPesquisar").click()
               }
