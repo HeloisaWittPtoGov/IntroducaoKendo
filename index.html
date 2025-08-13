@@ -211,6 +211,12 @@
                 let strMensagem = "";
                 if ($("#WinCadastroProduto #nome").val().trim() == "") {
                   strMensagem = strMensagem + "O campo nome é de preechimento obrigatório.\n"
+                } else {
+                  let nomeInformado = $("#WinCadastroProduto #nome").val().trim().toLowerCase();
+                  let verificaNome = produtos.find(i => i.nome.trim().toLocaleLowerCase() == nomeInformado)
+                  if (verificaNome) {
+                    strMensagem = strMensagem + "Já existe um produto cadastrado com o nome informado.\n"
+                  }
                 }
                 if ($("#WinCadastroProduto #categoria").val().trim() == "") {
                   strMensagem = strMensagem + "O campo Categoria é de preenchimento obrigatório.\n"
@@ -218,6 +224,7 @@
                 if ($("#WinCadastroProduto #preco").val().trim() <= 0) {
                   strMensagem = strMensagem + "O Preço deve ser maior que 0,00."
                 }
+
                 if (strMensagem != "") {
                   alert(strMensagem)
                   console.log(strMensagem)
