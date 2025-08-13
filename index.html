@@ -58,14 +58,33 @@
 </head>
 
 <script>
+  kendo.culture("pt-BR")
+
+  let produtos = [
+    { id: "1", nome: "Bolacha Parati", categoria: "Bolacha", preco: 3.00, ativo: "Sim", dataCadastro: "30/05/2025" },
+    { id: "2", nome: "Bolacha Panco", categoria: "Café", preco: 2.25, ativo: "Sim", dataCadastro: "30/05/2025" }
+  ]
+
   $(function () {
+
     $("#BtnPesquisar").kendoButton({
       click: function () {
-        if ($("#nomeFiltro").val() != "") {
-          $("#GrdConsultaProduto").data("kendoGrid").dataSource.filter({ field: "nome", operator: "contains", value: $("#nomeFiltro").val() })
+
+        let filtros = []
+
+        if ($("#nomeFiltro").val().trim() != "") {
+          filtros.push({ field: "nome", operator: "contains", value: $("#nomeFiltro").val() })
         }
+        if ($("#categoriaFiltro").val().trim() != "") {
+          filtros.push({ field: "categoria", operator: "contains", value: $("#categoriaFiltro").val() })
+        }
+        $("#GrdConsultaProduto").data("kendoGrid").dataSource.filter(filtros);
+
+        $("#GrdConsultaProduto").data("kendoGrid").dataSource.read();
+
       }
     })
+
     $("#BarAcoes").kendoToolBar({
       items: [
         {
@@ -110,6 +129,8 @@
     });
 
     $("#GrdConsultaProduto").kendoGrid({
+      toolbar: ["excel"],
+
       columns: [
         {
           field: "id",
@@ -128,6 +149,7 @@
           field: "preco",
           title: "Preço",
           width: "100px",
+          format: "{0:c}",
         },
         {
           field: "dataCadastro",
@@ -140,7 +162,14 @@
           width: "100px"
         }
       ],
-      dataSource: [{ id: "1", nome: "Bolacha Parati", categoria: "Bolacha", preco: "3.00", ativo: "Sim", dataCadastro: "30/05/2025" }, { id: "2", nome: "Bolacha Panco", categoria: "Bolacha", preco: "2.25", ativo: "Sim", dataCadastro: "30/05/2025" }],
+      dataSource: {
+        transport: {
+          read: function (options) {
+            console.log(produtos)
+            options.success(produtos)
+          }
+        }
+      },
       selectable: "row",
       change: function () {
         let GrdConsultaProduto = $("#GrdConsultaProduto").data("kendoGrid");
@@ -151,7 +180,8 @@
         $("#tabStripConsultaProduto #preco").val(item.preco);
         $("#tabStripConsultaProduto #dataCadastro").val(item.dataCadastro);
         $("#BarAcoes").data("kendoToolBar").enable("#BtnEditar");
-      }
+      },
+
     });
 
     $("#WinCadastroProduto").kendoWindow({
@@ -164,7 +194,6 @@
         top: 140,
         left: "20%"
       }
-
     });
 
     $("#BarAcoesWin").kendoToolBar({
@@ -193,15 +222,15 @@
                   alert(strMensagem)
                   console.log(strMensagem)
                 } else {
-                  $("#GrdConsultaProduto").data("kendoGrid").dataSource.add({
+                  produtos.push({
                     id: $("#GrdConsultaProduto").data("kendoGrid").dataSource.data().length + 1,
                     nome: $("#WinCadastroProduto #nome").val(),
                     categoria: $("#WinCadastroProduto #categoria").data("kendoDropDownList").value(),
-                    preco: $("#WinCadastroProduto #preco").val(),
+                    preco: $("#WinCadastroProduto #preco").data("kendoNumericTextBox").value(),
                     dataCadastro: $("#WinCadastroProduto #dataCadastro").val(),
                     ativo: $("#WinCadastroProduto #FlgAtivo").is(":checked") ? "Sim" : "Não"
                   })
-                  $("#BtnPesquisar").click()
+                  $("#BtnPesquisar").click();
                 }
               }
             },
@@ -211,7 +240,13 @@
               click: function () {
                 let GrdConsultaProduto = $("#GrdConsultaProduto").data("kendoGrid");
                 let item = GrdConsultaProduto.dataItem(GrdConsultaProduto.select());
-                $("#GrdConsultaProduto").data("kendoGrid").dataSource.remove(item);
+                let indiceRemover = produtos.findIndex(i => i.id === item.id)
+                produtos.splice(indiceRemover, 1)
+
+                // Buscar o indice do produto a ser deletado (pelo item.id)
+
+                // Remover o produto pelo indice
+
                 $("#BtnPesquisar").click()
               }
             },
@@ -252,7 +287,7 @@
 
     $("#WinCadastroProduto #preco").kendoNumericTextBox({
       decimals: 2,
-      restrictDecimals: true,
+      format: "c2",
     })
 
     $("#WinCadastroProduto #dataCadastro").kendoDatePicker({
@@ -277,6 +312,7 @@
     <div id="splHeader">
       <div class="k-filter k-bg-blue screen-filter-content">
         <input class="k-textbox" type="text" id="nomeFiltro" placeholder="Informe o nome">
+        <input class="k-textbox" type="text" id="categoriaFiltro" placeholder="Informe a categoria">
         <span id="BtnPesquisar">Pesquisar</span>
       </div>
       <div id="BarAcoes"></div>
