@@ -61,7 +61,7 @@
 
 	let funcionarios = [
 		{ id: "1", nomeCompleto: "Ana", cargo: "Auxiliar Administrativo", salario: 2500.00, dataAdmissao: "03/05/2025", status: "Sim" },
-		{ id: "2", nomeCompleto: "Joao", cargo: "Auxiliar Geral", salario: 2000.00, dataAdmissao: "03/05/2025", status: "Sim" }
+		{ id: "2", nomeCompleto: "Joao", cargo: "Auxiliar Geral", salario: 2000.00, dataAdmissao: "03/05/2025", status: "Não" }
 	];
 	$(function () {
 
@@ -76,7 +76,8 @@
 					filtros.push({ field: "cargo", operator: "contains", value: $("#cargoFiltro").val() })
 				}
 				$("#GrdConsultaFuncionarios").data("kendoGrid").dataSource.filter(filtros);
-				$("#GrdConsultaFuncionarios").data("kendoGrid").dataSource.read();
+
+				$("#BarAcoes").data("kendoToolBar").enable("#BtnEditar", false);
 			}
 		})
 
@@ -126,6 +127,7 @@
 
 		$("#GrdConsultaFuncionarios").kendoGrid({
 			toolbar: ["excel"],
+			sortable: true,
 
 			columns: [
 				{
@@ -159,7 +161,6 @@
 			dataSource: {
 				transport: {
 					read: function (options) {
-						console.log(funcionarios);
 						options.success(funcionarios)
 					}
 				}
