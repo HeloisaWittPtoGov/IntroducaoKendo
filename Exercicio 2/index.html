@@ -60,8 +60,8 @@
 	kendo.culture("pt-BR")
 
 	let funcionarios = [
-		{ id: "1", nomeCompleto: "Ana", cargo: "Auxiliar Administrativo", salario: 2500.00, dataAdmissao: "03/05/2025", statusAtivo: "Sim" },
-		{ id: "2", nomeCompleto: "Joao", cargo: "Auxiliar Geral", salario: 2000.00, dataAdmissao: "03/05/2025", statusAtivo: "Sim" }
+		{ id: "1", nomeCompleto: "Ana", cargo: "Auxiliar Administrativo", salario: 2500.00, dataAdmissao: "03/05/2025", status: "Sim" },
+		{ id: "2", nomeCompleto: "Joao", cargo: "Auxiliar Geral", salario: 2000.00, dataAdmissao: "03/05/2025", status: "Sim" }
 	];
 	$(function () {
 
@@ -76,10 +76,31 @@
 						{
 							text: "Incluir",
 							id: "BtnIncluir",
+							click: function () {
+								$("#WinCadastroFuncionarios").data("kendoWindow").open();
+								$("WinCadastroFuncionarios #id").val("");
+								$("WinCadastroFuncionarios #nomeCompleto").val("");
+								$("WinCadastroFuncionarios #cargo").val("");
+								$("WinCadastroFuncionarios #salario").data("kendoNumericTextBox").value("");
+								$("#WinCadastroFuncionarios #dataAdmissao").val("");
+								$("#WinCadastroFuncionarios #status").prop("checked", false)
+							}
 						},
 						{
 							text: "Editar",
 							id: "BtnEditar",
+							click: function () {
+								$("#WinCadastroFuncionarios").data("kendoWindow").open();
+								let GrdConsultaFuncionario = $("#GrdConsultaFuncionarios").data("kendoGrid");
+								let rstGrid = GrdConsultaFuncionario.dataItem(GrdConsultaFuncionario.select());
+								$("#WinCadastroFuncionarios #id").val(rstGrid.id);
+								$("#WinCadastroFuncionarios #nomeCompleto").val(rstGrid.nomeCompleto);
+								$("#WinCadastroFuncionarios #cargo").val(rstGrid.cargo);
+								$("#WinCadastroFuncionarios #salario").data("kendoNumericTextBox").value(rstGrid.salario);
+								$("#WinCadastroFuncionarios #dataAdmissao").val(rstGrid.dataAdmissao);
+								$("#WinCadastroFuncionarios #FlgStatus").prop("checked", rstGrid.status == "Sim");
+
+							}
 						}
 					]
 				}
@@ -111,7 +132,7 @@
 					title: "Data de Admissao",
 				},
 				{
-					field: "statusAtivo",
+					field: "status",
 					title: "Status Ativo",
 					width: "80px"
 				}
@@ -138,7 +159,7 @@
 
 		$("#WinCadastroFuncionarios").kendoWindow({
 			width: 800,
-			visible: true,
+			visible: false,
 			title: "Cadastro de Funcionarios",
 			maxWidth: 800,
 			maxHeight: 170,
@@ -257,7 +278,7 @@
 							Nome:
 						</td>
 						<td>
-							<input id="nome" type="text" class="k-textbox" style="width: 600px;">
+							<input id="nomeCompleto" type="text" class="k-textbox" style="width: 600px;">
 						</td>
 					</tr>
 				</table>
@@ -290,8 +311,8 @@
 				<table width="100%" cellpadding="0" cellspancing="2" role="presentation">
 					<tr>
 						<td>
-							<input id="status" type="checkbox" style="margin-left: 120px;" class="k-checkbox">
-							<label for="status" class="k-checkbox-label">Status Ativo</label>
+							<input id="FlgStatus" type="checkbox" style="margin-left: 120px;" class="k-checkbox">
+							<label for="FlgStatus" class="k-checkbox-label">Status Ativo</label>
 						</td>
 					</tr>
 				</table>
