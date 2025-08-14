@@ -89,6 +89,7 @@
 						{
 							text: "Editar",
 							id: "BtnEditar",
+							enable: false,
 							click: function () {
 								$("#WinCadastroFuncionarios").data("kendoWindow").open();
 								let GrdConsultaFuncionario = $("#GrdConsultaFuncionarios").data("kendoGrid");
@@ -106,6 +107,53 @@
 				}
 			]
 		});
+
+		$("#BarAcoesWin").kendoToolBar({
+			items: [
+				{
+					type: "spacer",
+				},
+				{
+					type: "buttonGroup",
+					buttons: [
+						{
+							text: "Gravar",
+							id: "BtnGravar",
+						},
+						{
+							text: "Excluir",
+							id: "BtnExcluir",
+							click: function () {
+								let GrdConsultaFuncionarios = $("#GrdConsultaFuncionarios").data("kendoGrid");
+								let item = GrdConsultaFuncionarios.dataItem(GrdConsultaFuncionarios.select());
+								let indiceRemover = funcionarios.findIndex(i => i.id === item.id)
+								funcionarios.splice(indiceRemover, 1)
+								$("#GrdConsultaFuncionarios").data("kendoGrid").dataSource.read()
+							}
+						},
+						{
+							text: "Limpar",
+							id: "BtnLimpar",
+							click: function () {
+								$("#WinCadastroFuncionarios #id").val("");
+								$("#WinCadastroFuncionarios #nomeCompleto").val("");
+								$("#WinCadastroFuncionarios #cargo").val("");
+								$("#WinCadastroFuncionarios #salario").data("kendoNumericTextBox").value("");
+								$("#WinCadastroFuncionarios #dataAdmissao").val("");
+								$("#WinCadastroFuncionarios #FlgStatus").prop("checked", false);
+							}
+						},
+						{
+							text: "Fechar",
+							id: "BtnFechar",
+							click: function () {
+								$("#WinCadastroFuncionarios").data("kendoWindow").close();
+							}
+						},
+					]
+				}
+			]
+		})
 
 		$("#GrdConsultaFuncionarios").kendoGrid({
 			columns: [
@@ -153,6 +201,7 @@
 				$("#tabStripConsultaFuncionarios #cargo").val(item.cargo);
 				$("#tabStripConsultaFuncionarios #salario").val(item.salario);
 				$("#tabStripConsultaFuncionarios #dataAdmissao").val(item.dataAdmissao);
+				$("#BarAcoes").data("kendoToolBar").enable("#BtnEditar");
 			}
 
 		});
@@ -316,7 +365,7 @@
 						</td>
 					</tr>
 				</table>
-				<div id="BarAcoes"></div>
+				<div id="BarAcoesWin"></div>
 			</form>
 		</div>
 	</div>
