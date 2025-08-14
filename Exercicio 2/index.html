@@ -110,6 +110,8 @@
 
 
 		$("#GrdConsultaFuncionarios").kendoGrid({
+			toolbar: ["excel"],
+
 			columns: [
 				{
 					field: "id",
@@ -213,28 +215,30 @@
 
 								if (strMensagem != "") {
 									alert(strMensagem)
-								}
-
-								if (indiceId >= 0) {
-									funcionarios[indiceId] = {
-										id: idCadastro,
-										nomeCompleto: $("#WinCadastroFuncionarios #nomeCompleto").val(),
-										cargo: $("#WinCadastroFuncionarios #cargo").val(),
-										salario: $("#WinCadastroFuncionarios #salario").data("kendoNumericTextBox").value(),
-										dataAdmissao: $("#WinCadastroFuncionarios #dataAdmissao").val(),
-										status: $("#WinCadastroFuncionarios #FlgStatus").is(":checked") ? "Sim" : "Não"
+								} else {
+									if (indiceId >= 0) {
+										funcionarios[indiceId] = {
+											id: idCadastro,
+											nomeCompleto: $("#WinCadastroFuncionarios #nomeCompleto").val(),
+											cargo: $("#WinCadastroFuncionarios #cargo").val(),
+											salario: $("#WinCadastroFuncionarios #salario").data("kendoNumericTextBox").value(),
+											dataAdmissao: $("#WinCadastroFuncionarios #dataAdmissao").val(),
+											status: $("#WinCadastroFuncionarios #FlgStatus").is(":checked") ? "Sim" : "Não"
+										}
+									}
+									else {
+										funcionarios.push({
+											id: $("#GrdConsultaFuncionarios").data("kendoGrid").dataSource.data().length + 1,
+											nomeCompleto: $("#WinCadastroFuncionarios #nomeCompleto").val(),
+											cargo: $("#WinCadastroFuncionarios #cargo").val(),
+											salario: $("#WinCadastroFuncionarios #salario").data("kendoNumericTextBox").value(),
+											dataAdmissao: $("#WinCadastroFuncionarios #dataAdmissao").val(),
+											status: $("#WinCadastroFuncionarios #FlgStatus").is("Checked") ? "Sim" : "Não"
+										})
 									}
 								}
-								else {
-									funcionarios.push({
-										id: $("#GrdConsultaFuncionarios").data("kendoGrid").dataSource.data().length + 1,
-										nomeCompleto: $("#WinCadastroFuncionarios #nomeCompleto").val(),
-										cargo: $("#WinCadastroFuncionarios #cargo").val(),
-										salario: $("#WinCadastroFuncionarios #salario").data("kendoNumericTextBox").value(),
-										dataAdmissao: $("#WinCadastroFuncionarios #dataAdmissao").val(),
-										status: $("#WinCadastroFuncionarios #FlgStatus").is("Checked") ? "Sim" : "Não"
-									})
-								}
+
+
 
 								$("#GrdConsultaFuncionarios").data("kendoGrid").dataSource.read();
 							}
