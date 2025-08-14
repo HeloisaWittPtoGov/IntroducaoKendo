@@ -78,10 +78,10 @@
 							id: "BtnIncluir",
 							click: function () {
 								$("#WinCadastroFuncionarios").data("kendoWindow").open();
-								$("WinCadastroFuncionarios #id").val("");
-								$("WinCadastroFuncionarios #nomeCompleto").val("");
-								$("WinCadastroFuncionarios #cargo").val("");
-								$("WinCadastroFuncionarios #salario").data("kendoNumericTextBox").value("");
+								$("#WinCadastroFuncionarios #id").val("");
+								$("#WinCadastroFuncionarios #nomeCompleto").val("");
+								$("#WinCadastroFuncionarios #cargo").val("");
+								$("#WinCadastroFuncionarios #salario").data("kendoNumericTextBox").value("");
 								$("#WinCadastroFuncionarios #dataAdmissao").val("");
 								$("#WinCadastroFuncionarios #status").prop("checked", false)
 							}
@@ -108,6 +108,71 @@
 			]
 		});
 
+
+		$("#GrdConsultaFuncionarios").kendoGrid({
+			columns: [
+				{
+					field: "id",
+					title: "ID",
+					width: "80px"
+				},
+				{
+					field: "nomeCompleto",
+					title: "Nome",
+				},
+				{
+					field: "cargo",
+					title: "Cargo",
+				},
+				{
+					field: "salario",
+					title: "Salario",
+					format: "{0:c}",
+				},
+				{
+					field: "dataAdmissao",
+					title: "Data de Admissao",
+				},
+				{
+					field: "status",
+					title: "Status Ativo",
+					width: "80px"
+				}
+			],
+			dataSource: {
+				transport: {
+					read: function (options) {
+						console.log(funcionarios);
+						options.success(funcionarios)
+					}
+				}
+			},
+			selectable: "row",
+			change: function () {
+				let GrdConsultaFuncionarios = $("#GrdConsultaFuncionarios").data("kendoGrid");
+				let item = GrdConsultaFuncionarios.dataItem(GrdConsultaFuncionarios.select());
+				$("#tabStripConsultaFuncionarios #id").val(item.id);
+				$("#tabStripConsultaFuncionarios #nomeCompleto").val(item.nomeCompleto);
+				$("#tabStripConsultaFuncionarios #cargo").val(item.cargo);
+				$("#tabStripConsultaFuncionarios #salario").val(item.salario);
+				$("#tabStripConsultaFuncionarios #dataAdmissao").val(item.dataAdmissao);
+				$("#BarAcoes").data("kendoToolBar").enable("#BtnEditar");
+			}
+
+		});
+
+		$("#WinCadastroFuncionarios").kendoWindow({
+			width: 800,
+			visible: false,
+			title: "Cadastro de Funcionarios",
+			maxWidth: 800,
+			maxHeight: 170,
+			position: {
+				top: 140,
+				left: "20%"
+			}
+		});
+
 		$("#BarAcoesWin").kendoToolBar({
 			items: [
 				{
@@ -119,6 +184,61 @@
 						{
 							text: "Gravar",
 							id: "BtnGravar",
+							click: function () {
+
+								let idCadastro = $("#id").val()
+								let indiceId = funcionarios.findIndex(i => i.id == idCadastro)
+
+								let strMensagem = "";
+
+								if ($("#WinCadastroFuncionarios #nomeCompleto").val().trim() == "") {
+									strMensagem = strMensagem + "O campo Nome é de preenchimento obrigatório.\n"
+								} else {
+									let nomeInformado = $("#WinCadastroFuncionarios #nomeCompleto").val().trim().toLowerCase();
+									let verificaNome = funcionarios.find(function (i) {
+										return i.nomeCompleto.trim().toLowerCase() == nomeInformado && i.id != idCadastro
+									})
+									if (verificaNome) {
+										strMensagem = strMensagem + "Já existe um funcinario cadastrado com o nome informado.\n"
+									}
+								}
+
+								if ($("#WinCadastroFuncionarios #cargo").val().trim() == "") {
+									strMensagem = strMensagem + "O campo cargo é de preenchimento obrigatório.\n"
+								}
+
+								if ($("#WinCadastroFuncionarios #salario").val().trim() <= 0) {
+									strMensagem = strMensagem + "O salario deve ser maior que 0,00."
+								}
+
+								if (strMensagem != "") {
+									alert(strMensagem)
+								}
+
+								if (indiceId >= 0) {
+									funcionarios[indiceId] = {
+										id: idCadastro,
+										nomeCompleto: $("#WinCadastroFuncionarios #nomeCompleto").val(),
+										cargo: $("#WinCadastroFuncionarios #cargo").val(),
+										salario: $("#WinCadastroFuncionarios #salario").data("kendoNumericTextBox").value(),
+										dataAdmissao: $("#WinCadastroFuncionarios #dataAdmissao").val(),
+										status: $("#WinCadastroFuncionarios #FlgStatus").is(":checked") ? "Sim" : "Não"
+									}
+								}
+								else {
+									funcionarios.push({
+										id: $("#GrdConsultaFuncionarios").data("kendoGrid").dataSource.data().length + 1,
+										nomeCompleto: $("#WinCadastroFuncionarios #nomeCompleto").val(),
+										cargo: $("#WinCadastroFuncionarios #cargo").val(),
+										salario: $("#WinCadastroFuncionarios #salario").data("kendoNumericTextBox").value(),
+										dataAdmissao: $("#WinCadastroFuncionarios #dataAdmissao").val(),
+										status: $("#WinCadastroFuncionarios #FlgStatus").is("Checked") ? "Sim" : "Não"
+									})
+								}
+
+								$("#GrdConsultaFuncionarios").data("kendoGrid").dataSource.read();
+							}
+
 						},
 						{
 							text: "Excluir",
@@ -155,68 +275,6 @@
 			]
 		})
 
-		$("#GrdConsultaFuncionarios").kendoGrid({
-			columns: [
-				{
-					field: "id",
-					title: "ID",
-					width: "80px"
-				},
-				{
-					field: "nomeCompleto",
-					title: "Nome",
-				},
-				{
-					field: "cargo",
-					title: "Cargo",
-				},
-				{
-					field: "salario",
-					title: "Salario",
-					format: "{0:c}",
-				},
-				{
-					field: "dataAdmissao",
-					title: "Data de Admissao",
-				},
-				{
-					field: "status",
-					title: "Status Ativo",
-					width: "80px"
-				}
-			],
-			dataSource: {
-				transport: {
-					read: function (options) {
-						options.success(funcionarios)
-					}
-				}
-			},
-			selectable: "row",
-			change: function () {
-				let GrdConsultaFuncionarios = $("#GrdConsultaFuncionarios").data("kendoGrid");
-				let item = GrdConsultaFuncionarios.dataItem(GrdConsultaFuncionarios.select());
-				$("#tabStripConsultaFuncionarios #id").val(item.id);
-				$("#tabStripConsultaFuncionarios #nomeCompleto").val(item.nomeCompleto);
-				$("#tabStripConsultaFuncionarios #cargo").val(item.cargo);
-				$("#tabStripConsultaFuncionarios #salario").val(item.salario);
-				$("#tabStripConsultaFuncionarios #dataAdmissao").val(item.dataAdmissao);
-				$("#BarAcoes").data("kendoToolBar").enable("#BtnEditar");
-			}
-
-		});
-
-		$("#WinCadastroFuncionarios").kendoWindow({
-			width: 800,
-			visible: false,
-			title: "Cadastro de Funcionarios",
-			maxWidth: 800,
-			maxHeight: 170,
-			position: {
-				top: 140,
-				left: "20%"
-			}
-		});
 
 		$("#WinCadastroFuncionarios #salario").kendoNumericTextBox({
 			decimals: 2,
