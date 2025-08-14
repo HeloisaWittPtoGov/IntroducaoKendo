@@ -65,6 +65,21 @@
 	];
 	$(function () {
 
+		$("#BtnPesquisar").kendoButton({
+			click: function () {
+				let filtros = []
+
+				if ($("#nomeFiltro").val().trim() != "") {
+					filtros.push({ field: "nomeCompleto", operator: "contains", value: $("#nomeFiltro").val() })
+				}
+				if ($("#cargoFiltro").val().trim() != "") {
+					filtros.push({ field: "cargo", operator: "contains", value: $("#cargoFiltro").val() })
+				}
+				$("#GrdConsultaFuncionarios").data("kendoGrid").dataSource.filter(filtros);
+				$("#GrdConsultaFuncionarios").data("kendoGrid").dataSource.read();
+			}
+		})
+
 		$("#BarAcoes").kendoToolBar({
 			items: [
 				{
@@ -237,10 +252,7 @@
 										})
 									}
 								}
-
-
-
-								$("#GrdConsultaFuncionarios").data("kendoGrid").dataSource.read();
+								$("#BtnPesquisar").click();
 							}
 
 						},
@@ -252,7 +264,7 @@
 								let item = GrdConsultaFuncionarios.dataItem(GrdConsultaFuncionarios.select());
 								let indiceRemover = funcionarios.findIndex(i => i.id === item.id)
 								funcionarios.splice(indiceRemover, 1)
-								$("#GrdConsultaFuncionarios").data("kendoGrid").dataSource.read()
+								$("#BtnPesquisar").click()
 							}
 						},
 						{
@@ -302,7 +314,11 @@
 <body>
 	<div id="splConsulta" style="height: 100%;">
 		<div id="splHead">
-			<div class="k-bg-blue screen-filter-content"></div>
+			<div class="k-bg-blue screen-filter-content">
+				<input id="nomeFiltro" class="k-textbox" type="text" placeholder="Informe um Nome">
+				<input id="cargoFiltro" class="k-textbox" type="text" placeholder="Informe um Cargo">
+				<span id="BtnPesquisar">Pesquisar</span>
+			</div>
 			<div id="BarAcoes"></div>
 		</div>
 
