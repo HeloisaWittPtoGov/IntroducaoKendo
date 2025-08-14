@@ -134,13 +134,35 @@
 				$("#tabStripConsultaFuncionarios #dataAdmissao").val(item.dataAdmissao);
 			}
 
+		});
+
+		$("#WinCadastroFuncionarios").kendoWindow({
+			width: 800,
+			visible: true,
+			title: "Cadastro de Funcionarios",
+			maxWidth: 800,
+			maxHeight: 170,
+			position: {
+				top: 140,
+				left: "20%"
+			}
+		});
+
+		$("#WinCadastroFuncionarios #salario").kendoNumericTextBox({
+			decimals: 2,
+			format: "c2",
+		})
+
+		$("#WinCadastroFuncionarios #dataAdmissao").kendoDatePicker({
+			dateInput: true,
+			format: "dd/MM/yyyy"
 		})
 
 		$("#tabStripConsultaFuncionarios").kendoTabStrip()
 
 		$("#splConsulta").kendoSplitter({
 			orientation: "vertical",
-			panes: [{}, {}, {}],
+			panes: [{ min: "25px" }, { min: "100px" }, {}],
 		})
 	});
 </script>
@@ -198,7 +220,7 @@
 							<td style="text-align: right; width: 100px;">
 								Salario:
 							</td>
-							<td style="width: 371px;">
+							<td>
 								<input id="salario" type="text" class="k-textbox k-input-disabled"
 									style="width: 120px;">
 							</td>
@@ -213,6 +235,68 @@
 					</table>
 				</div>
 			</div>
+		</div>
+	</div>
+
+	<div id="WinCadastroFuncionarios" style="display: flex; justify-content: center; align-items: center;">
+		<div id="form" class="k-form" style="width: 100%;">
+			<form>
+				<table width="100%" cellpadding="0" cellspancing="2" role="presentation">
+					<tr>
+						<td style="text-align: right; width: 120px;">
+							ID:
+						</td>
+						<td>
+							<input id="id" type="text" class="k-textbox k-input-disabled" style="width: 80px;">
+						</td>
+					</tr>
+				</table>
+				<table width="100%" cellpadding="0" cellspancing="2" role="presentation">
+					<tr>
+						<td style="text-align: right; width: 120px;" class="k-required">
+							Nome:
+						</td>
+						<td>
+							<input id="nome" type="text" class="k-textbox" style="width: 600px;">
+						</td>
+					</tr>
+				</table>
+				<table width="100%" cellpadding="0" cellspancing="2" role="presentation">
+					<tr>
+						<td style="text-align: right; width: 120px;" class="k-required">
+							Cargo:
+						</td>
+						<td>
+							<input id="cargo" type="text" class="k-textbox" style="width: 600px;">
+						</td>
+					</tr>
+				</table>
+				<table width="100%" cellpadding="0" cellspancing="2" role="presentation">
+					<tr>
+						<td style="text-align: right; width: 120px;" class="k-required">
+							Salario:
+						</td>
+						<td>
+							<input id="salario">
+						</td>
+						<td style="text-align: right; width: 273px;">
+							Data de Admissao:
+						</td>
+						<td>
+							<input id="dataAdmissao">
+						</td>
+					</tr>
+				</table>
+				<table width="100%" cellpadding="0" cellspancing="2" role="presentation">
+					<tr>
+						<td>
+							<input id="status" type="checkbox" style="margin-left: 120px;" class="k-checkbox">
+							<label for="status" class="k-checkbox-label">Status Ativo</label>
+						</td>
+					</tr>
+				</table>
+				<div id="BarAcoes"></div>
+			</form>
 		</div>
 	</div>
 </body>
