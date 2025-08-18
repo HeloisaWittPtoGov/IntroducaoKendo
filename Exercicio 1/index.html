@@ -60,10 +60,9 @@
 <script>
 	kendo.culture("pt-BR")
 
-	let produtos = [
-		{ id: "1", nome: "Bolacha Parati", categoria: "Bolacha", preco: 3.00, ativo: "Sim", dataCadastro: "30/05/2025" },
-		{ id: "2", nome: "Bolacha Panco", categoria: "Café", preco: 2.25, ativo: "Sim", dataCadastro: "30/05/2025" }
-	]
+	let produtosStorage = localStorage.getItem("produtos");
+
+	let produtos = produtosStorage ? JSON.parse(produtosStorage) : []
 
 	$(function () {
 
@@ -256,9 +255,12 @@
 											dataCadastro: $("#WinCadastroProduto #dataCadastro").val(),
 											ativo: $("#WinCadastroProduto #FlgAtivo").is(":checked") ? "Sim" : "Não"
 										})
+										localStorage.setItem("produtos", JSON.stringify(produtos))
 									}
 								}
 
+
+								console.log(JSON.parse(localStorage.getItem("produtos")))
 								$("#BtnPesquisar").click();
 							}
 						},
@@ -270,6 +272,8 @@
 								let item = GrdConsultaProduto.dataItem(GrdConsultaProduto.select());
 								let indiceRemover = produtos.findIndex(i => i.id === item.id)
 								produtos.splice(indiceRemover, 1)
+
+								localStorage.setItem("produtos", JSON.stringify(produtos))
 
 								$("#BtnPesquisar").click()
 							}
