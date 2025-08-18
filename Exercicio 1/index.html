@@ -60,7 +60,9 @@
 <script>
 	kendo.culture("pt-BR")
 
-	let produtosStorage = localStorage.getItem("produtos");
+	const Storage_key = "app.lista.produtos.v1"
+
+	let produtosStorage = localStorage.getItem(Storage_key);
 
 	let produtos = produtosStorage ? JSON.parse(produtosStorage) : []
 
@@ -255,12 +257,12 @@
 											dataCadastro: $("#WinCadastroProduto #dataCadastro").val(),
 											ativo: $("#WinCadastroProduto #FlgAtivo").is(":checked") ? "Sim" : "Não"
 										})
-										localStorage.setItem("produtos", JSON.stringify(produtos))
 									}
+									localStorage.setItem(Storage_key, JSON.stringify(produtos))
 								}
 
 
-								console.log(JSON.parse(localStorage.getItem("produtos")))
+								console.log(JSON.parse(localStorage.getItem(Storage_key)))
 								$("#BtnPesquisar").click();
 							}
 						},
@@ -273,7 +275,7 @@
 								let indiceRemover = produtos.findIndex(i => i.id === item.id)
 								produtos.splice(indiceRemover, 1)
 
-								localStorage.setItem("produtos", JSON.stringify(produtos))
+								localStorage.setItem(Storage_key, JSON.stringify(produtos))
 
 								$("#BtnPesquisar").click()
 							}
