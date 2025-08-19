@@ -62,9 +62,9 @@
 
 	const Storage_key = "app.lista.produtos.v1"
 
-	let produtosStorage = localStorage.getItem(Storage_key);
+	let dadosStorage = JSON.parse(localStorage.getItem(Storage_key)) || { contador: 0, produtos: [] };
 
-	let produtos = produtosStorage ? JSON.parse(produtosStorage) : []
+	let produtos = dadosStorage.produtos;
 
 	$(function () {
 
@@ -166,8 +166,8 @@
 			dataSource: {
 				transport: {
 					read: function (options) {
-						console.log(produtos)
-						options.success(produtos)
+						console.log(dadosStorage.produtos)
+						options.success(dadosStorage.produtos)
 					}
 				}
 			},
@@ -196,6 +196,12 @@
 				left: "20%"
 			}
 		});
+
+		function gerarIdUnico() {
+			dadosStorage.contador++;
+			localStorage.setItem(Storage_key, JSON.stringify(dadosStorage));
+			return Date.now().toString() + "_" + dadosStorage.contador;
+		}
 
 		$("#BarAcoesWin").kendoToolBar({
 			items: [
@@ -239,7 +245,7 @@
 									alert(strMensagem)
 								} else {
 									if (indiceId >= 0) {
-										produtos[indiceId] = {
+										dadosStorage.produtos[indiceId] = {
 											id: idCadastro,
 											nome: $("#WinCadastroProduto #nome").val(),
 											categoria: $("#WinCadastroProduto #categoria").data("kendoDropDownList").value(),
@@ -249,8 +255,8 @@
 										}
 									}
 									else {
-										produtos.push({
-											id: $("#GrdConsultaProduto").data("kendoGrid").dataSource.data().length + 1,
+										dadosStorage.produtos.push({
+											id: gerarIdUnico(),
 											nome: $("#WinCadastroProduto #nome").val(),
 											categoria: $("#WinCadastroProduto #categoria").data("kendoDropDownList").value(),
 											preco: $("#WinCadastroProduto #preco").data("kendoNumericTextBox").value(),
@@ -258,7 +264,7 @@
 											ativo: $("#WinCadastroProduto #FlgAtivo").is(":checked") ? "Sim" : "Não"
 										})
 									}
-									localStorage.setItem(Storage_key, JSON.stringify(produtos))
+									localStorage.setItem(Storage_key, JSON.stringify(dadosStorage))
 								}
 
 
@@ -272,10 +278,10 @@
 							click: function () {
 								let GrdConsultaProduto = $("#GrdConsultaProduto").data("kendoGrid");
 								let item = GrdConsultaProduto.dataItem(GrdConsultaProduto.select());
-								let indiceRemover = produtos.findIndex(i => i.id === item.id)
-								produtos.splice(indiceRemover, 1)
+								let indiceRemover = dadosStorage.produtos.findIndex(i => i.id === item.id)
+								dadosStorage.produtos.splice(indiceRemover, 1)
 
-								localStorage.setItem(Storage_key, JSON.stringify(produtos))
+								localStorage.setItem(Storage_key, JSON.stringify(dadosStorage))
 
 								$("#BtnPesquisar").click()
 							}
